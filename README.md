@@ -1,2 +1,2 @@
-# COSC2626
+# COSC2626-A1
 Cloud Computing
