@@ -6,3 +6,8 @@
 * S3 - Simple Storage Service
 * API Gateway 
 * DynamoDB
+
+## How to run
+Run the Springboot Application in InteliJ
+
+localhost:8080
