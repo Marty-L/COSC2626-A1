@@ -40,7 +40,7 @@ public class JsonParserService {
             } else throw new IllegalArgumentException("ERROR (parsing JSON): \"songs\" array is not an array");
 
         } catch (IOException e) {
-            //TODO: Probably need better Exception handling than this
+            //TODO: Probably need better handling for IOException
             e.printStackTrace();
         }
 

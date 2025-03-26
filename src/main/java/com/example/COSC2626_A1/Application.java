@@ -2,14 +2,12 @@ package com.example.COSC2626_A1;
 
 import com.example.COSC2626_A1.service.JsonParserService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.COSC2626_A1.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +19,15 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private final JsonParserService jsonParserService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
+	@Autowired
+	private final S3Service s3Service;
 
+	//TODO: implement global logging/exception handling
+	//private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
 
-	public Application(JsonParserService jsonParserService) {
+	public Application(JsonParserService jsonParserService, S3Service s3Service) {
 		this.jsonParserService = jsonParserService;
+		this.s3Service = s3Service;
 	}
 
 	//RUN THE MAIN SERVER APPLICATION
@@ -33,13 +35,19 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		//TODO: Fix file location (https://www.baeldung.com/spring-classpath-file-access)
 		try {
+			//Convert the classpath reference to an absolute path for the local filesystem
+			//Adapted from: https://www.baeldung.com/spring-classpath-file-access
+			//Viewed: 2025-03-06
 			File file = new ClassPathResource("data/2025a1.json").getFile();
 			String filePath = file.getAbsolutePath();
+
 			List<String> imageURLs = jsonParserService.extractImageURLs(filePath);
+			s3Service.createS3BucketIfNotExists();
+
 		} catch (IOException e) {
-			LOGGER.error("Error reading file: " + e.getMessage());
+			//TODO: Add better exception handling
+			e.printStackTrace();
 		}
 
 	}
