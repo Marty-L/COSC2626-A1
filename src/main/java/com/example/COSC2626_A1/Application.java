@@ -24,7 +24,7 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		//TODO: Fix file location
+		//TODO: Fix file location (https://www.baeldung.com/spring-classpath-file-access)
 		List<String> imageURLs = jsonParserService.extractImageURLs("C:/Users/mclaw/IdeaProjects/COSC2626-A1/src/main/resources/data/2025a1.json");
 	}
 }
