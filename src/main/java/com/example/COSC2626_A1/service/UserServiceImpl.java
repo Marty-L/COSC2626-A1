@@ -67,6 +67,12 @@ public class UserServiceImpl implements UserServiceBL{
         }
     }
 
+    @Override
+    public boolean validateLogin(String username, String password) {
+        User user = dynamoDBMapper.load(User.class, username);
+        return user != null && user.getPassword().equals(password);
+    }
+
     private UserDTO convertToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         BeanUtils.copyProperties(user, userDTO);

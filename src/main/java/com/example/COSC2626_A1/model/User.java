@@ -5,7 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Data;
 
-// Define the table and schemea for the login table.
+// Define the table and schema for the login table.
 @DynamoDBTable(tableName = "login")
 @Data
 public class User {

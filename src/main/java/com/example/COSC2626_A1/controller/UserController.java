@@ -2,7 +2,10 @@ package com.example.COSC2626_A1.controller;
 
 import com.example.COSC2626_A1.model.UserDTO;
 import com.example.COSC2626_A1.service.UserServiceBL;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.List;
 
@@ -12,9 +15,11 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceBL userServiceBL;
+    private final SpringTemplateEngine springTemplateEngine;
 
-    public UserController(UserServiceBL userServiceBL) {
+    public UserController(UserServiceBL userServiceBL, SpringTemplateEngine springTemplateEngine) {
         this.userServiceBL = userServiceBL;
+        this.springTemplateEngine = springTemplateEngine;
     }
 
     @GetMapping
@@ -47,6 +52,18 @@ public class UserController {
     @DeleteMapping("/{email}")
     public void deleteUser(@PathVariable String email) {
         userServiceBL.deleteUser(email);
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute UserDTO userDTO, Model model) {
+        boolean isValid = userServiceBL.validateLogin(userDTO.getUser_name(), userDTO.getPassword());
+
+        if (isValid) {
+            return "redirect:/home"; // Redirect to the  on success
+        } else {
+            model.addAttribute("error", "Invalid email or password");
+            return null; // Return to login page with an error message
+        }
     }
 
 }

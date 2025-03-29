@@ -16,4 +16,7 @@ public interface UserServiceBL {
     UserDTO updateUser(String email, UserDTO user);
 
     void deleteUser(String email);
+
+    boolean validateLogin(String username, String password);
+
 }
