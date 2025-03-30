@@ -25,15 +25,16 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(@ModelAttribute("userDTO") UserDTO userDTO) {
+    public String processLogin(@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
         boolean loginSuccess = userService.validateLogin(userDTO.getEmail(), userDTO.getPassword());
 
         if(loginSuccess) {
             System.out.println("Logging in:" + userDTO.getEmail());
+            return "redirect:/";
         } else {
             System.out.println("Error logging in: " + userDTO.getUser_name());
+            model.addAttribute("errorMessage", "Email or password is invalid");
+            return "login";
         }
-
-        return "login";
     }
 }

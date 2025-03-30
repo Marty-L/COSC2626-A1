@@ -13,6 +13,10 @@
                   method="post"
                   class="login-form">
                 <h2>Login</h2>
+                <!-- Display error message if present -->
+                <div>
+                    <p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>
+                </div>
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="text" id="email"
