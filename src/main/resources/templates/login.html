@@ -6,6 +6,7 @@
         <link rel="stylesheet" th:href="@{/css/styles.css}">
     </head>
     <body>
+        <!--/api/users/login-->
         <div class="container">
             <form th:object="${userDTO}"
                   th:action="@{/login}"
@@ -13,10 +14,10 @@
                   class="login-form">
                 <h2>Login</h2>
                 <div class="input-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username"
-                           th:field="*{user_name}"
-                           name="username" required>
+                    <label for="email">Email</label>
+                    <input type="text" id="email"
+                           th:field="*{email}"
+                           name="email" required>
                 </div>
                 <div class="input-group">
                     <label for="password">Password</label>

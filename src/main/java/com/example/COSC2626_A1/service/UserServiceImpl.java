@@ -68,8 +68,10 @@ public class UserServiceImpl implements UserServiceBL{
     }
 
     @Override
-    public boolean validateLogin(String username, String password) {
-        User user = dynamoDBMapper.load(User.class, username);
+    public boolean validateLogin(String email, String password) {
+        System.out.println("Email: " + email + "\tPass: " + password);
+        User user = dynamoDBMapper.load(User.class, email);
+        System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
         return user != null && user.getPassword().equals(password);
     }
 
