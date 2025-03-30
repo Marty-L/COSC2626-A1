@@ -1,5 +1,6 @@
 package com.example.COSC2626_A1;
 
+import com.example.COSC2626_A1.service.ImageDownloaderService;
 import com.example.COSC2626_A1.service.JsonParserService;
 
 import com.example.COSC2626_A1.service.S3Service;
@@ -11,7 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -22,12 +23,17 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private final S3Service s3Service;
 
+	@Autowired
+	private final ImageDownloaderService imageDownloaderService;
+
 	//TODO: implement global logging/exception handling
 	//private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
 
-	public Application(JsonParserService jsonParserService, S3Service s3Service) {
+	public Application(JsonParserService jsonParserService, S3Service s3Service,
+					   ImageDownloaderService imageDownloaderService) {
 		this.jsonParserService = jsonParserService;
 		this.s3Service = s3Service;
+		this.imageDownloaderService = imageDownloaderService;
 	}
 
 	//RUN THE MAIN SERVER APPLICATION
@@ -42,13 +48,14 @@ public class Application implements CommandLineRunner {
 			File file = new ClassPathResource("data/2025a1.json").getFile();
 			String filePath = file.getAbsolutePath();
 
-			List<String> imageURLs = jsonParserService.extractImageURLs(filePath);
+			LinkedHashSet<String> imageURLs = jsonParserService.extractImageURLs(filePath);
 			s3Service.createS3BucketIfNotExists();
+			imageDownloaderService.downloadImages(imageURLs);
+			s3Service.uploadFile();
 
 		} catch (IOException e) {
 			//TODO: Add better exception handling
 			e.printStackTrace();
 		}
-
 	}
 }
