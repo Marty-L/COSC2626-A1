@@ -40,7 +40,9 @@ public class S3Service implements AutoCloseable {
     @Override
     public void close() {
         //NOTE: Ordinarily, this would NOT occur in a real-world app, but is being done here to save AW$$$
+        System.out.println("Closing S3 client...");
         deleteBucket();
+        System.out.println("S3 client closed.");
     }
 
     public void createS3BucketIfNotExists() {
@@ -71,10 +73,21 @@ public class S3Service implements AutoCloseable {
         }
     }
 
-    public void uploadFile(String fileName, Path filePath) {
+    public void uploadFileList(Map<String, Path> imageFiles) {
+        for(Map.Entry<String, Path> entry : imageFiles.entrySet()) {
+
+            if (uploadFile(entry.getKey(), entry.getValue())) {
+                System.out.println("Uploaded: " + entry.getKey());
+            } else {
+                System.out.println("Upload of " + entry.getKey() + " failed");
+            }
+        }
+    }
+    public boolean uploadFile(String fileName, Path filePath) {
         //Upload a local file to S3 using the given fileName and path
         //Adapted from Week03 workshop S3Tasks code (https://rmit.instructure.com/courses/141320/files/43744075?wrap=1)
         //Viewed: 2025-03-14
+        boolean status = false;
 
         try {
             // Upload a file as a new object with ContentType and title specified.
@@ -84,6 +97,7 @@ public class S3Service implements AutoCloseable {
             metadata.addUserMetadata("title", fileName);
             request.setMetadata(metadata);
             s3Client.putObject(request);
+            status = true;
 
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
@@ -94,6 +108,7 @@ public class S3Service implements AutoCloseable {
             // couldn't parse the response from Amazon S3.
             e.printStackTrace();
         }
+        return status;
     }
 
     //TODO: Get an object from bucket
@@ -107,11 +122,13 @@ public class S3Service implements AutoCloseable {
         try {
             ObjectListing objectListing = s3Client.listObjects(s3BucketName);
 
+            System.out.println("Deleting all objects in bucket: " + s3BucketName);
+
             //Delete all objects from the bucket.
             while (true) {
-                Iterator<S3ObjectSummary> objIter = objectListing.getObjectSummaries().iterator();
-                while (objIter.hasNext()) {
-                    s3Client.deleteObject(s3BucketName, objIter.next().getKey());
+                for (S3ObjectSummary obj : objectListing.getObjectSummaries()) {
+                    System.out.println("Deleting object: " + obj.getKey());
+                    s3Client.deleteObject(s3BucketName, obj.getKey());
                 }
 
                 //The listObjects() call returns object listings in pages.
@@ -119,12 +136,15 @@ public class S3Service implements AutoCloseable {
                 if (objectListing.isTruncated()) {
                     objectListing = s3Client.listNextBatchOfObjects(objectListing);
                 } else {
+                    System.out.println("No more objects in bucket: " + s3BucketName);
                     break;
                 }
             }
 
             //Bucket is empty; delete the bucket.
+            System.out.println("Deleting bucket: " + s3BucketName +"...");
             s3Client.deleteBucket(s3BucketName);
+            System.out.println("Bucket deleted.");
 
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process

@@ -58,7 +58,7 @@ public class Application implements CommandLineRunner {
 
 			//Create the S3 bucket and upload the images to it.
 			s3Service.createS3BucketIfNotExists();
-			s3Service.uploadFile("TaylorSwift.jpg", imageFiles.get("TaylorSwift.jpg"));
+			s3Service.uploadFileList(imageFiles);
 
 		} catch (IOException e) {
 			//TODO: Add better exception handling
