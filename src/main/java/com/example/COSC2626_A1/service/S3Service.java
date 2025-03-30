@@ -12,7 +12,10 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.Map;
 
 @Service
 public class S3Service implements AutoCloseable {
@@ -68,8 +71,30 @@ public class S3Service implements AutoCloseable {
         }
     }
 
-    //TODO: Upload objects to bucket
-    public void uploadFile() {}
+    public void uploadFile(String fileName, Path filePath) {
+        //Upload a local file to S3 using the given fileName and path
+        //Adapted from Week03 workshop S3Tasks code (https://rmit.instructure.com/courses/141320/files/43744075?wrap=1)
+        //Viewed: 2025-03-14
+
+        try {
+            // Upload a file as a new object with ContentType and title specified.
+            PutObjectRequest request = new PutObjectRequest(s3BucketName, fileName, filePath.toFile());
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("image/jpeg");
+            metadata.addUserMetadata("title", fileName);
+            request.setMetadata(metadata);
+            s3Client.putObject(request);
+
+        } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+        }
+    }
 
     //TODO: Get an object from bucket
     public void downloadFile() {}

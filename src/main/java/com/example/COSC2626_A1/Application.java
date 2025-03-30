@@ -12,7 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -48,10 +50,15 @@ public class Application implements CommandLineRunner {
 			File file = new ClassPathResource("data/2025a1.json").getFile();
 			String filePath = file.getAbsolutePath();
 
+			//Parse the JSON file and grab the imageURLs for downloading from GitHub
 			LinkedHashSet<String> imageURLs = jsonParserService.extractImageURLs(filePath);
+
+			//Download the images and save them in temp storage
+			Map<String, Path> imageFiles = imageDownloaderService.downloadImages(imageURLs);
+
+			//Create the S3 bucket and upload the images to it.
 			s3Service.createS3BucketIfNotExists();
-			imageDownloaderService.downloadImages(imageURLs);
-			s3Service.uploadFile();
+			s3Service.uploadFile("TaylorSwift.jpg", imageFiles.get("TaylorSwift.jpg"));
 
 		} catch (IOException e) {
 			//TODO: Add better exception handling

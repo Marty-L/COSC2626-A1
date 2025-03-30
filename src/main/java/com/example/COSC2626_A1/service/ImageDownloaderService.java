@@ -24,7 +24,7 @@ public class ImageDownloaderService {
         // * https://howtodoinjava.com/java/io/create-a-temporary-file-in-java/ (Viewed: 2025-03-30)
 
         //Keep a record of where the temporary images are stored, using imageURLs as keys.
-        Map<String, Path> imageFilesTmp = new HashMap<>();
+        Map<String, Path> imageFiles = new HashMap<>();
 
         try {
             //Temporary storage - delegate the job of figuring out the location to the OS.
@@ -48,7 +48,7 @@ public class ImageDownloaderService {
                         Files.write(tempFile, response.getBody());
 
                         //Update the record of where the temp file is stored
-                        imageFilesTmp.put(fileName, tempFile);
+                        imageFiles.put(fileName, tempFile);
                         System.out.println("Image downloaded: " + imageURL + " -> " + tempFile);
 
                     } else {
@@ -66,6 +66,6 @@ public class ImageDownloaderService {
             System.err.println("Error creating the temporary local storage directory");
         }
 
-        return imageFilesTmp;
+        return imageFiles;
     }
 }
