@@ -9,15 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class MainController {
-
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
-
-
-    @GetMapping("/signup")
-    public String signup() {
-        return "signup";
-    }
+    //TODO: Add main.html
+    //TODO: Add main GET handler
 }

@@ -30,6 +30,7 @@ public class LoginController {
 
         if(loginSuccess) {
             System.out.println("Logging in:" + userDTO.getEmail());
+            //TODO: Redirect to main.html
             return "redirect:/";
         } else {
             System.out.println("Error logging in: " + userDTO.getUser_name());
