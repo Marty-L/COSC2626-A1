@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DynamoDBConfig {
-// Initialising AWS variables from application.properties
+    // Initialising AWS variables from application.properties
     @Value("${aws.access.key}")
     private String awsAccessKey;
 
@@ -42,7 +42,7 @@ public class DynamoDBConfig {
         return new AWSStaticCredentialsProvider(amazonAWSCredentials());
     }
 
-//  Initialising the connection from Springboot to the DynamoDB server.
+    //  Initialising the connection from Springboot to the DynamoDB server.
     @Bean
     public AmazonDynamoDB amazonDynamoDB(){
         return AmazonDynamoDBClientBuilder.standard()

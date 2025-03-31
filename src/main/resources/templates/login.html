@@ -12,6 +12,10 @@
                   th:action="@{/login}"
                   method="post"
                   class="login-form">
+                <div>
+                    <p th:if="${registrationSuccessMessage}" class="success-message"
+                       th:text="${registrationSuccessMessage}"></p>
+                </div>
                 <h2>Login</h2>
                 <!-- Display error message if present -->
                 <div>
@@ -30,7 +34,7 @@
                            name="password" required>
                 </div>
                 <button type="submit">Login</button>
-                <p class="message">Not registered? <a th:href="@{/signup}">Create an account</a></p>
+                <p class="message">Not registered? <a th:href="@{/register}">Create an account</a></p>
             </form>
         </div>
     </body>

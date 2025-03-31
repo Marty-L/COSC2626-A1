@@ -73,3 +73,9 @@ button:hover {
     font-weight: bold;
     margin-top: 10px;
 }
+
+.success-message {
+    color: darkgreen;
+    font-weight: bold;
+    margin-top: 10px;
+}
