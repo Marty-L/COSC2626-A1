@@ -35,4 +35,6 @@ public class UserService {
     public User validateUser(String email, String password){
         return userRepository.validateUser(email, password);
     }
+
+    public boolean registerNewUser(User user){ return userRepository.registerNewUser(user);}
 }

@@ -9,8 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 // Define the table and schema for the login table.
+@Data //Provides getter and setter for all fields (Lombok)
 @DynamoDBTable(tableName = "login")
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +18,10 @@ public class User {
     @DynamoDBHashKey(attributeName = "email")
     private String email;
 
-    @DynamoDBAttribute
+    @DynamoDBAttribute(attributeName = "user_name")
     private String user_name;
 
-    @DynamoDBAttribute
+    @DynamoDBAttribute(attributeName = "password")
     private String password;
 
 }
