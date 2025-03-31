@@ -1,69 +1,43 @@
 package com.example.COSC2626_A1.controller;
 
-import com.example.COSC2626_A1.model.UserDTO;
-import com.example.COSC2626_A1.service.UserServiceBL;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import com.example.COSC2626_A1.model.User;
+import com.example.COSC2626_A1.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.List;
 
 // Rest controller for calling CRUD functions DynamoDB
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/users")
 public class UserController {
 
-    private final UserServiceBL userServiceBL;
-    private final SpringTemplateEngine springTemplateEngine;
+    private final UserService userService;
 
-    public UserController(UserServiceBL userServiceBL, SpringTemplateEngine springTemplateEngine) {
-        this.userServiceBL = userServiceBL;
-        this.springTemplateEngine = springTemplateEngine;
+    @GetMapping("/users")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
-    @GetMapping
-    public List<UserDTO> getAllUsers() {
-        return userServiceBL.getAllUsers();
+    @PostMapping("/user")
+    public String createUser(@RequestBody User user){
+        return userService.createCustomer(user);
     }
 
-    @GetMapping("/{email}")
-    public UserDTO getUserByEmail(@PathVariable String email) {
-        return userServiceBL.getUserByEmail(email);
+
+    @GetMapping("/user/{email}")
+    public User getUserByEmail(@PathVariable String email){
+        return userService.getUser(email);
     }
 
-// TODO: Decide whether username will be a parameter for @GetMapping
-
-//    @GetMapping("/{username}")
-//    public UserDTO getUserByUsername(@PathVariable String username) {
-//        return userServiceBL.getUserByUsername(username);
-//    }
-
-    @PostMapping
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userServiceBL.createNewUser(userDTO);
+    @PutMapping("/user/{email}")
+    public User updateUser(@PathVariable String email, @RequestBody User user){
+        return userService.updateCustomer(email, user);
     }
 
-    @PutMapping("/{email}")
-    public UserDTO updateUser(@PathVariable String email, @RequestBody UserDTO userDTO) {
-        return userServiceBL.updateUser(email, userDTO);
-    }
-
-    @DeleteMapping("/{email}")
-    public void deleteUser(@PathVariable String email) {
-        userServiceBL.deleteUser(email);
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute UserDTO userDTO, Model model) {
-        boolean isValid = userServiceBL.validateLogin(userDTO.getUser_name(), userDTO.getPassword());
-
-        if (isValid) {
-            return "redirect:/home"; // Redirect to the  on success
-        } else {
-            model.addAttribute("error", "Invalid email or password");
-            return null; // Return to login page with an error message
-        }
+    @DeleteMapping("/user/{email}")
+    public void deleteUser(@PathVariable String email){
+        userService.deleteUser(email);
     }
 
 }
