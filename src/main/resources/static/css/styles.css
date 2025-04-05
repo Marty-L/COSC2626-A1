@@ -57,6 +57,7 @@ button:hover {
 .message {
     text-align: center;
     margin-top: 15px;
+    font-weight: bold;
 }
 
 .message a {
@@ -70,12 +71,12 @@ button:hover {
 
 .error-message {
     color: red;
+    margin-top: 15px;
     font-weight: bold;
-    margin-top: 10px;
-}
 
+}
 .success-message {
     color: darkgreen;
+    margin-top: 15px;
     font-weight: bold;
-    margin-top: 10px;
 }

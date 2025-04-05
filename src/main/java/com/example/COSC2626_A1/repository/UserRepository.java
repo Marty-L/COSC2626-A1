@@ -45,10 +45,10 @@ public class UserRepository {
 
 
     public User validateUser(String email, String password) {
-        System.out.println("Email: " + email + "\tPass: " + password);
+        //System.out.println("Email: " + email + "\tPass: " + password);
         User user = dynamoDBMapper.load(User.class, email);
         if (user != null && user.getPassword().equals(password)) {
-            System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
+            //System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
             return user;
         }
         return null;

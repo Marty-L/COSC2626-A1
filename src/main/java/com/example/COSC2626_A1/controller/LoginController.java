@@ -2,6 +2,7 @@ package com.example.COSC2626_A1.controller;
 
 import com.example.COSC2626_A1.model.User;
 import com.example.COSC2626_A1.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -25,21 +26,19 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String validateLogin(@ModelAttribute User user, Model model) {
+    public String validateLogin(@ModelAttribute User user, Model model, HttpSession session) {
 
-        System.out.println("Logging in");
-        System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
+        //System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
         User validatedUser = userService.validateUser(user.getEmail(), user.getPassword());
 
         if(validatedUser != null) {
-            System.out.println("Logging in:" + user.getEmail());
-            //TODO: Redirect to main.html
-//            return "redirect:/";
+            System.out.println("Logging in:" + user.getEmail() + "\t with password: " + user.getPassword());
+            session.setAttribute("user", validatedUser); //Add the validated user to the session
+            return "redirect:/main";
         } else {
             System.out.println("Error logging in: " + user.getUser_name());
-            model.addAttribute("errorMessage", "Email or password is invalid");
-//            return "login";
+            model.addAttribute("loginErrorMessage", "Email or password is invalid");
+            return "/login";
         }
-        return null;
     }
 }

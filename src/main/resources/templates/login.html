@@ -12,15 +12,11 @@
                   th:action="@{/login}"
                   method="post"
                   class="login-form">
-                <div>
-                    <p th:if="${registrationSuccessMessage}" class="success-message"
-                       th:text="${registrationSuccessMessage}"></p>
-                </div>
                 <h2>Login</h2>
-                <!-- Display error message if present -->
-<!--                <div>-->
-<!--                    <p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>-->
-<!--                </div>-->
+                <div> <!-- Display error/success messages if present -->
+                    <p th:if="${loginErrorMessage}" class="error-message" th:text="${loginErrorMessage}"></p>
+                    <p th:if="${registrationSuccessMessage}" class="success-message" th:text="${registrationSuccessMessage}"></p>
+                </div>
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="text" id="email"
