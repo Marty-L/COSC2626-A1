@@ -4,16 +4,52 @@
         <h2 class="section-header">Subscriptions</h2>
         <p class="info-text">Songs you've subscribed to.</p>
         <div class="scrollable-subscription-area">
+
+            <div class="card mb-3">
+                <div class="card-body d-flex">
+                    <!-- Left Column: Image -->
+                    <div class="image-column">
+                        <img src="/images/JimmyBuffett.jpg" alt="Song Image" class="img-fluid">
+                    </div>
+
+                    <!-- Middle Column: Song Details -->
+                    <div class="details-column">
+                        <h5 class="card-title">You're Really Rustlin' My Jimmies (Girl)</h5>
+                        <p class="card-text">Jimmy Buffet</p>
+                        <p class="card-text">All You Can Eat At The Jimmy Buffet</p>
+                        <p class="card-text">1985</p>
+                    </div>
+
+                    <!-- Right Column: Remove Button -->
+                    <div class="remove-button-container">
+                        <form th:action="@{/remove}" method="post">
+                            <input type="hidden" />
+                            <button class="remove-button" type="submit">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Check if there are any songs -->
             <div th:if="${#lists.isEmpty(songs)}">
                 <p class="no-subscriptions-message">You don't have any subscriptions....yet. Make a query to start the jams!</p>
             </div>
+            <!-- Adapted from example here: https://www.baeldung.com/thymeleaf-list (viewed: 2025-04-06) -->
             <div th:each="song : ${songs}" class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${song.title}">Song Title</h5>
                     <p class="card-text" th:text="'Artist: ' + ${song.artist}">Artist Name</p>
                     <p class="card-text" th:text="'Album: ' + ${song.album}">Album Name</p>
+                    <p class="card-text" th:text="'Year: ' + ${song.year}">Year</p>
+                    <!-- Hidden form to trigger song removal -->
+                    <div class="remove-button-container">
+                        <form th:action="@{/remove}" method="post">
+                            <input type="hidden" th:name="songId" th:value="${song.id}" />
+                            <button class="remove-button" type="submit">Remove</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+        </div>
     </div>
 </section>
