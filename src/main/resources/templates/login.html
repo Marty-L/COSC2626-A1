@@ -16,6 +16,7 @@
                 <div> <!-- Display error/success messages if present -->
                     <p th:if="${loginErrorMessage}" class="error-message" th:text="${loginErrorMessage}"></p>
                     <p th:if="${registrationSuccessMessage}" class="success-message" th:text="${registrationSuccessMessage}"></p>
+                    <p th:if="${logoutSuccessMessage}" class="success-message" th:text="${logoutSuccessMessage}"></p>
                 </div>
                 <div class="input-group">
                     <label for="email">Email</label>
