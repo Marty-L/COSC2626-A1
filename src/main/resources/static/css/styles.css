@@ -41,6 +41,10 @@ body {
 
 }
 
+.custom-navbar {
+    background-color: #6dc980;
+}
+
 button {
     width: 100%;
     padding: 10px;
