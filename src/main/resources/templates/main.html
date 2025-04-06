@@ -39,43 +39,14 @@
         <div class="row">
             <!-- Main Subscription Area -->
             <div class="col-lg-9 col-md-8 mb-4">
-                <section>
-                    <div class="card p-3">
-                        <h2>Subscription Area</h2>
-                        <p>This is where subscription-related content will go.</p>
-                    </div>
-                </section>
+                <div th:replace="~{partials/subscription :: subscription}"></div>
             </div>
 
             <!-- Sidebar Query Area -->
             <div class="col-lg-3 col-md-4 mb-4">
                 <section>
                     <div class="card p-3">
-                        <section>
-                            <h2 class="text-right">Query Area</h2>
-                            <p>This is where query-related content will go.</p>
-                            <div class="card p-3">
-                                <form action="/submitQuery" method="POST">
-                                    <div class="form-group">
-                                        <label for="title">Title</label>
-                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="year">Year</label>
-                                        <input type="text" class="form-control" id="year" name="year" placeholder="Enter Year">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="artist">Artist</label>
-                                        <input type="text" class="form-control" id="artist" name="artist" placeholder="Enter Artist">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="album">Album</label>
-                                        <input type="text" class="form-control" id="album" name="album" placeholder="Enter Album">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Query</button>
-                                </form>
-                            </div>
-                        </section>
+                        <div th:replace="~{partials/query :: query}"></div>
                     </div>
                 </section>
             </div>

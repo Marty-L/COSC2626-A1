@@ -1,0 +1,26 @@
+<!-- Partial HTML for query area of main.html -->
+<section th:fragment="query">
+    <h2 class="text-right">Query Area</h2>
+    <p>This is where query-related content will go.</p>
+    <div class="card p-3">
+        <form action="/submitQuery" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
+            </div>
+            <div class="form-group">
+                <label for="year">Year</label>
+                <input type="text" class="form-control" id="year" name="year" placeholder="Enter Year">
+            </div>
+            <div class="form-group">
+                <label for="artist">Artist</label>
+                <input type="text" class="form-control" id="artist" name="artist" placeholder="Enter Artist">
+            </div>
+            <div class="form-group">
+                <label for="album">Album</label>
+                <input type="text" class="form-control" id="album" name="album" placeholder="Enter Album">
+            </div>
+            <button type="submit" class="btn btn-primary">Query</button>
+        </form>
+    </div>
+</section>
