@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
         <a class="navbar-brand" th:href="@{/}">COSC2626-A1 Music App</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +29,7 @@
         </div>
     </nav>
 
-    <div class="container-fluid" style="border: 2px solid red">
+    <div class="container-fluid" style="border: 2px solid green">
         <!--Spacing tips here: https://getbootstrap.com/docs/4.0/layout/grid/
             This can be  tricky; you can temporarily add this to a class to see its borders:
             style="border: 2px solid red"
