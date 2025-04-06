@@ -31,7 +31,10 @@
                            th:field="*{password}"
                            name="password" required>
                 </div>
-                <button type="submit">Login</button>
+                <div class="form-actions">
+                    <button type="submit">Login</button>
+                </div>
+
                 <p class="message">Not registered? <a th:href="@{/register}">Create an account</a></p>
             </form>
         </div>

@@ -6,3 +6,42 @@
     padding: 20px;
     border-radius: 5px;
 }
+.scrollable-subscription-area {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.page-title {
+    text-align: center;
+    margin: 15px;
+    font-weight: bolder;
+}
+.section-header {
+    text-align: center;
+}
+
+.info-text {
+    color: darkgreen;
+    text-align: center;
+}
+
+.username-text {
+    font-weight: bolder;
+    color: darkgreen;
+}
+
+.no-subscriptions-message {
+    font-weight: bolder;
+    color: forestgreen;
+}
+
+.logout-link {
+    color: black;
+}
+
+.logout-link:hover {
+    color: #ffffff;
+}

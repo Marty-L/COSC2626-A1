@@ -1,7 +1,7 @@
 <!-- Partial HTML for query area of main.html -->
 <section th:fragment="query">
-    <h2 class="text-right">Query Area</h2>
-    <p>This is where query-related content will go.</p>
+    <h2 class="section-header">Query Area</h2>
+    <p class="info-text">Looking for your next fave track?</p>
     <div class="card p-3">
         <form action="/submitQuery" method="POST">
             <div class="form-group">
@@ -20,7 +20,11 @@
                 <label for="album">Album</label>
                 <input type="text" class="form-control" id="album" name="album" placeholder="Enter Album">
             </div>
-            <button type="submit" class="btn btn-primary">Query</button>
+            <!-- TODO: Return on error: "No result is retrieved. Please query again"-->
+            <p th:if="${queryErrorMessage}" class="error-message" th:text="${queryErrorMessage}"></p>
+            <div class="form-actions">
+                <button type="submit">Query</button>
+            </div>
         </form>
     </div>
 </section>
