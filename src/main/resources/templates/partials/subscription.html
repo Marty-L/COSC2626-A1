@@ -19,8 +19,8 @@
                         <div class="details-column">
                             <h5 class="card-title">You're Really Rustlin' My Jimmies (Girl)</h5>
                             <p class="card-text">Jimmy Buffet</p>
-                            <p class="card-text">All You Can Eat At The Jimmy Buffet</p>
                             <p class="card-text">1985</p>
+                            <p class="card-text">All You Can Eat At The Jimmy Buffet</p>
                         </div>
 
                         <!-- Right Column: Remove Button -->
@@ -33,12 +33,13 @@
                     </div>
                 </div>
             </div>
+            <!-- TODO: A            -->
             <div th:each="song : ${songs}" class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${song.title}">Song Title</h5>
                     <p class="card-text" th:text="'Artist: ' + ${song.artist}">Artist Name</p>
-                    <p class="card-text" th:text="'Album: ' + ${song.album}">Album Name</p>
                     <p class="card-text" th:text="'Year: ' + ${song.year}">Year</p>
+                    <p class="card-text" th:text="'Album: ' + ${song.album}">Album Name</p>
                     <!-- Hidden form to trigger song removal -->
                     <div class="button-container">
                         <form th:action="@{/remove}" method="post">

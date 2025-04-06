@@ -1,0 +1,32 @@
+<!-- Partial HTML for search area of main.html -->
+<!--/* @thymesVar id="song" type="com.example.COSC2626_A1.model.Song" */-->
+<section th:fragment="search">
+    <h2 class="section-header">Search</h2>
+    <p class="info-text">Looking for your next fave track?</p>
+    <div class="card p-3">
+        <form id="searchForm" method="POST" th:action="@{/search}" th:object="${song}">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input th:field="*{title}" type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
+            </div>
+            <div class="form-group">
+                <label for="artist">Artist</label>
+                <input th:field="*{artist}" type="text" class="form-control" id="artist" name="artist" placeholder="Enter Artist">
+            </div>
+            <div class="form-group">
+                <label for="year">Year</label>
+                <input th:field="*{year}"  type="text" class="form-control" id="year" name="year" placeholder="Enter Year">
+            </div>
+            <div class="form-group">
+                <label for="album">Album</label>
+                <input th:field="*{album}"  type="text" class="form-control" id="album" name="album" placeholder="Enter Album">
+            </div>
+            <p th:if="${searchErrorMessage}" class="error-message" th:text="${searchErrorMessage}"></p>
+            <div class="form-actions">
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <!-- Ensure at least one field has been filled in -->
+    <script th:src="@{/js/validateSearchForm.js}"></script>
+</section>

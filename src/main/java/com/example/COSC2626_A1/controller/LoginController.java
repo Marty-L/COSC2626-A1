@@ -26,7 +26,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String validateLogin(@ModelAttribute User user, Model model, HttpSession session) {
+    public String validateLogin(Model model, HttpSession session, @ModelAttribute User user) {
 
         //System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
         User validatedUser = userService.validateUser(user.getEmail(), user.getPassword());

@@ -26,5 +26,4 @@ public class Song {
     private String album;
     @DynamoDBAttribute
     private String img_url;
-
 }

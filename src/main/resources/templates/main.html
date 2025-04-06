@@ -30,26 +30,25 @@
 </nav>
 
 <div class="container-fluid">
-    <!-- Start row *after* the header -->
     <div class="row">
-        <!-- Left Column with Subscriptions and Query Results -->
+        <!-- Left Column with Subscriptions and Search Results -->
         <div class="col-lg-9 col-md-8">
             <!-- Subscription Area -->
             <div class="mb-4">
                 <div th:replace="~{partials/subscription :: subscription}"></div>
             </div>
 
-            <!-- Query Results Area -->
-            <div class="mb-4">
-                <div th:replace="~{partials/query_results :: query_results}"></div>
+            <!-- Search Results Area: only render if a search has been made.  -->
+            <div class="mb-4" th:if="${searchMade != null and searchMade}">
+                <div th:replace="~{partials/search_results :: search_results}"></div>
             </div>
         </div>
 
-        <!-- Right Column with Query Form -->
+        <!-- Right Column with Search Form -->
         <div class="col-lg-3 col-md-4">
             <section>
                 <div class="card p-3 mb-4">
-                    <div th:replace="~{partials/query :: query}"></div>
+                    <div th:replace="~{partials/search :: search}"></div>
                 </div>
             </section>
         </div>
