@@ -26,20 +26,19 @@
 }
 
 .card-body {
-    display: flex;          /* Use Flexbox to create columns */
-    align-items: center;    /* Vertically align content */
+    display: flex;
+    align-items: center;
 }
 
 .image-column {
-    flex: 1;                /* Take up 1/3 of the width */
-    padding-right: 10px;    /* Add some space between the image and details */
+    flex: 0 0 80px;
+    padding-right: 10px;
 }
 
 .details-column {
-    flex: 2;                /* Take up 2/3 of the width */
+    flex: 1;
     padding-left: 10px;
 }
-
 
 .info-text {
     color: darkgreen;
@@ -56,6 +55,11 @@
     color: forestgreen;
 }
 
+.no-results-message {
+    font-weight: bolder;
+    color: darkred;
+}
+
 .logout-link {
     color: #064517;
 }
@@ -64,28 +68,18 @@
     color: #ffffff;
 }
 
-.image-column{
-
-
+.button-container {
+    flex: 0 0 auto;
+    margin-left: auto;
 }
 
-.details-column {
-
-}
-
-.remove-button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-
-.remove-button {
+.song-action-button {
+    width: auto;
     font-size: 0.8rem;
     padding: 5px 10px;
 }
 
-.remove-button:hover {
+.song-action-button:hover {
     color: darkgreen;
     font-weight: bold;
 }
-

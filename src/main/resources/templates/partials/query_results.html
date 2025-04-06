@@ -1,13 +1,14 @@
 <!-- Partial HTML for subscription area of main.html -->
-<section th:fragment="subscription">
+<section th:fragment="query_results">
     <div class="card p-3">
-        <h2 class="section-header">Subscriptions</h2>
-        <p class="info-text">All the songs you already know and love.</p>
+        <h2 class="section-header">Search Results</h2>
+        <p class="info-text">Check out what we found for you!</p>
         <div class="scrollable-subscription-area">
+
             <!-- Check if there are any songs -->
             <!-- Adapted from example here: https://www.baeldung.com/thymeleaf-list (viewed: 2025-04-06) -->
             <div th:if="${#lists.isEmpty(songs)}">
-                <p class="no-subscriptions-message">You don't have any subscriptions....yet. Why not search for some new jams?</p>
+                <p class="no-results-message">No results retrieved. Please try another query.</p>
                 <div class="card mb-3">
                     <div class="card-body d-flex">
                         <!-- Left Column: Image -->
@@ -27,7 +28,7 @@
                         <div class="button-container">
                             <form th:action="@{/remove}" method="post">
                                 <input type="hidden" />
-                                <button class="song-action-button" type="submit">Remove</button>
+                                <button class="song-action-button" type="submit">Subscribe</button>
                             </form>
                         </div>
                     </div>
@@ -43,7 +44,7 @@
                     <div class="button-container">
                         <form th:action="@{/remove}" method="post">
                             <input type="hidden" th:name="songId" th:value="${song.id}" />
-                            <button class="song-action-button" type="submit">Remove</button>
+                            <button class="song-action-button" type="submit">Subscribe</button>
                         </form>
                     </div>
                 </div>
