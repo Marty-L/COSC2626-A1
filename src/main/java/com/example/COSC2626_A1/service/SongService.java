@@ -32,4 +32,5 @@ public class SongService {
         songRepository.deleteSong(title);
     }
 
+    public List<Song> searchSongs(String title, String artist, String year, String album){ return songRepository.searchSongs(title, artist, year, album); }
 }

@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @AllArgsConstructor
@@ -49,31 +51,34 @@ public class SongRepository {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
 
         List<String> filterExpressions = new ArrayList<>();
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        System.out.println("Title: " + title + ", Artist: " + artist + ", Year: " + year + ", Album: " + album);
 
         if (title != null && !title.isEmpty()) {
             filterExpressions.add("contains(title, :title)");
+            expressionAttributeValues.put(":title", new AttributeValue().withS(title));
         }
+
         if (artist != null && !artist.isEmpty()) {
             filterExpressions.add("contains(artist, :artist)");
+            expressionAttributeValues.put(":artist", new AttributeValue().withS(artist));
         }
+
         if (album != null && !album.isEmpty()) {
             filterExpressions.add("contains(album, :album)");
+            expressionAttributeValues.put(":album", new AttributeValue().withS(album));
         }
-        if (year != null) {
+
+        if (year != null && !year.isEmpty()) {
             filterExpressions.add("year = :year");
+            expressionAttributeValues.put(":year", new AttributeValue().withS(year));
         }
 
         if (!filterExpressions.isEmpty()) {
             scanExpression.setFilterExpression(String.join(" and ", filterExpressions));
+            scanExpression.setExpressionAttributeValues(expressionAttributeValues);
         }
 
-        // Add values to the filter expression (e.g., for :title, :artist, etc.)
-        scanExpression.addExpressionAttributeValuesEntry(":title", new AttributeValue().withS(title));
-        scanExpression.addExpressionAttributeValuesEntry(":artist", new AttributeValue().withS(artist));
-        scanExpression.addExpressionAttributeValuesEntry(":album", new AttributeValue().withS(album));
-        scanExpression.addExpressionAttributeValuesEntry(":year", new AttributeValue().withS(year));
-
-        // Perform the scan and return the results
         return dynamoDBMapper.scan(Song.class, scanExpression);
     }
 
