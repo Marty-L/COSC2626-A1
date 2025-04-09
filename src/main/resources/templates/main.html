@@ -39,7 +39,7 @@
             </div>
 
             <!-- Search Results Area: only render if a search has been made.  -->
-            <div class="mb-4" th:if="${searchMade != null and searchMade}">
+            <div class="mb-4" th:if="${searchMade}">
                 <div th:replace="~{partials/search_results :: search_results}"></div>
             </div>
         </div>

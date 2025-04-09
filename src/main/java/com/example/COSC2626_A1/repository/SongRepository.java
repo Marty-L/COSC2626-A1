@@ -49,9 +49,11 @@ public class SongRepository {
 
     public List<Song> searchSongs(String title, String artist, String year, String album){
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-
+        // TODO: Case insensitive search needs to be made
         List<String> filterExpressions = new ArrayList<>();
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        Map<String, String> expressionAttributeNames = new HashMap<>();
+
         System.out.println("Title: " + title + ", Artist: " + artist + ", Year: " + year + ", Album: " + album);
 
         if (title != null && !title.isEmpty()) {
@@ -70,13 +72,16 @@ public class SongRepository {
         }
 
         if (year != null && !year.isEmpty()) {
-            filterExpressions.add("year = :year");
+            filterExpressions.add("#yr = :year");
             expressionAttributeValues.put(":year", new AttributeValue().withS(year));
+            expressionAttributeNames.put("#yr", "year");
         }
 
         if (!filterExpressions.isEmpty()) {
             scanExpression.setFilterExpression(String.join(" and ", filterExpressions));
             scanExpression.setExpressionAttributeValues(expressionAttributeValues);
+            scanExpression.setExpressionAttributeNames(expressionAttributeNames);
+
         }
 
         return dynamoDBMapper.scan(Song.class, scanExpression);

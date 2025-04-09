@@ -18,40 +18,38 @@ public class SongController {
 
     private final SongService songService;
 
+    // TODO: Remove Later
     @GetMapping("/songs")
     @ResponseBody
-    public List<Song> getAllSongs(){
+    public List<Song> getAllSongs() {
         return songService.getAllSongs();
     }
 
     @PostMapping("/search")
-    public String search(
-            @ModelAttribute Song song,
-            Model model,
-            HttpSession session) {
-// TODO: not added session
-        List<Song> songs = songService.searchSongs(
+    public String search(@ModelAttribute Song song, Model model, HttpSession session) {
+        List<Song> searchedSongs = songService.searchSongs(
                 song.getTitle(),
                 song.getArtist(),
                 song.getYear(),
                 song.getAlbum());
+        // Adds returned songs to the model
+        model.addAttribute("searchedSongs", searchedSongs);
 
-        model.addAttribute("songs", songs);
+//      TODO: Currently prints the results - Remove later
+        System.out.println("Search Results:");
+        for (Song s : searchedSongs) {
+            System.out.println("Title: " + s.getTitle() +
+                    ", Artist: " + s.getArtist() +
+                    ", Year: " + s.getYear() +
+                    ", Album: " + s.getAlbum());
+        }
+
+        // Retaining user in the model after a search
+        Object user = session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
         model.addAttribute("searchMade", true);
-        System.out.println(songs);
         return "main"; // Renders templates/main.html with results
     }
-//    @PostMapping("/search")
-//    public String search(Model model, HttpSession session, @ModelAttribute Song song) {
-//        //TODO: Add functionality to search for a song
-//        System.out.println(song);
-//
-//        List<Song> songs = songService.searchSongs(song.getTitle(), song.getArtist(), song.getYear(), song.getAlbum());
-//
-//        model.addAttribute("songs", songs);
-//
-//        //Set a session attribute to indicate a search has been made
-//        session.setAttribute("searchMade", true);
-//        return "redirect:/main";
-//    }
 }

@@ -4,7 +4,7 @@
     <h2 class="section-header">Search</h2>
     <p class="info-text">Looking for your next fave track?</p>
     <div class="card p-3">
-        <form id="searchForm" method="POST" th:action="@{/search}" th:object="${song}">
+        <form id="searchForm" method="POST" th:action="@{/search}" th:object="${song}" >
             <div class="form-group">
                 <label for="title">Title</label>
                 <input th:field="*{title}" type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
