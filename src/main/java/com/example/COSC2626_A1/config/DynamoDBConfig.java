@@ -1,10 +1,7 @@
 package com.example.COSC2626_A1.config;
 
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.*;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -28,26 +25,25 @@ public class DynamoDBConfig {
     @Value("${aws.region}")
     private String awsRegion;
 
-//    For Local use only
-//    @Value("${aws.profile}")
-//    private String awsProfile;
+    @Value("${aws.dynamodb.sessionToken}")
+    private String dynamodbSessionToken;
 
-    @Bean
-    public AWSCredentials amazonAWSCredentials(){
-        return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-    }
-
-    @Bean
     public AWSCredentialsProvider amazonAWSCredentialsProvider(){
         return new AWSStaticCredentialsProvider(amazonAWSCredentials());
     }
 
-    //  Initialising the connection from Springboot to the DynamoDB server.
+    @Bean
+    public AWSCredentials amazonAWSCredentials(){
+        return new BasicSessionCredentials(awsAccessKey, awsSecretKey, dynamodbSessionToken);
+    }
+
+
+//      Initialising the connection from Springboot to the DynamoDB server.
     @Bean
     public AmazonDynamoDB amazonDynamoDB(){
         return AmazonDynamoDBClientBuilder.standard()
+                .withCredentials(amazonAWSCredentialsProvider())
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, awsRegion))
-//                .withCredentials(amazonAWSCredentialsProvider())
                 .build();
     }
 
