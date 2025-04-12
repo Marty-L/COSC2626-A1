@@ -28,6 +28,10 @@ public class SongService {
         return songRepository.getSong(title);
     }
 
+    public Song getSongByTitleArtist(String title, String album){
+        return songRepository.getSongByTitleArtist(title, album);
+    }
+
     public void deleteSong(String title){
         songRepository.deleteSong(title);
     }

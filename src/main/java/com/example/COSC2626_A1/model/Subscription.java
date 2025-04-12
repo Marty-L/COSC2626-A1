@@ -21,9 +21,19 @@ public class Subscription {
     private String email;
 
     @DynamoDBAttribute(attributeName = "songs")
-    private String songs;
+    private List<SubSong> songs;
 
+    @DynamoDBDocument
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SubSong {
+        @DynamoDBAttribute
+        private String title;
 
-
+        @DynamoDBAttribute
+        private String album;
+    }
 
 }

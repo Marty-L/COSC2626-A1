@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 public class Song {
     @DynamoDBHashKey(attributeName = "title")
     private String title;
-    @DynamoDBRangeKey(attributeName = "artist")
-    private String artist;
+    @DynamoDBRangeKey(attributeName = "album")
+    private String album;
     @DynamoDBAttribute
     private String year;
     @DynamoDBAttribute
-    private String album;
+    private String artist;
     @DynamoDBAttribute
     private String img_url;
 }

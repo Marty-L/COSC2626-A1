@@ -31,6 +31,10 @@ public class SongRepository {
         return dynamoDBMapper.load(Song.class, title);
     }
 
+    public Song getSongByTitleArtist(String title, String album){
+        return dynamoDBMapper.load(Song.class, title, album);
+    }
+
     public Song updateSong(String title, Song song){
         Song load = dynamoDBMapper.load(Song.class, title);
         load.setArtist(song.getArtist());
