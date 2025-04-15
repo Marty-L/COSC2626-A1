@@ -9,7 +9,6 @@
             <div th:if="${#lists.isEmpty(subscribedSongs)}">
                 <p class="no-subscriptions-message">You don't have any subscriptions....yet. Why not search for some new jams?</p>
             </div>
-            <!-- TODO: A            -->
             <div th:each="song : ${subscribedSongs}" class="card mb-3"
                  data-title="${song.title}" data-album="${song.album}">
                 <div class="card-body">
@@ -22,7 +21,7 @@
                         <p class="card-text" th:text="'Year: ' + ${song.year}">Year</p>
                         <p class="card-text" th:text="'Album: ' + ${song.album}">Album Name</p>
                     </div>
-                    <!-- Hidden form to trigger song removal -->
+                    <!-- Hidden form to trigger song removal from subscription list -->
                     <div class="button-container">
                         <form th:action="@{/subscription/remove}" method="post">
                             <input type="hidden" name="email" th:value="${user.email}" />

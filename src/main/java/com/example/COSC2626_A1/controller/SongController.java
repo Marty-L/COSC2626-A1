@@ -24,14 +24,12 @@ public class SongController {
     private final SubscriptionService subscriptionService;
     private final S3Service s3Service;
 
-    // TODO: Remove later - Debug purposes
     @GetMapping("/subscribe")
     @ResponseBody
     public List<Subscription> getAllSubscriptions() {
         return subscriptionService.getAllSubscriptions();
     }
 
-    // TODO: Remove later - Debug purposes
     @GetMapping("/songs")
     @ResponseBody
     public List<Song> getAllSongs() {
@@ -45,18 +43,16 @@ public class SongController {
                 song.getArtist(),
                 song.getYear(),
                 song.getAlbum());
-        // Adds returned songs to the model
+
+        //Add the search results to the session and record a search was made
+        session.setAttribute("searchedSongs", searchedSongs);
+        session.setAttribute("searchMade", true);
 
         //Add the image for each song returned from the search.
         for(Song s : searchedSongs) {
             s.setS3_img_URL(s3Service.getPreSignedImageUrl(s.getS3key()));
         }
 
-        //Add the search results to the session and record a search was made
-        session.setAttribute("searchedSongs", searchedSongs);
-        session.setAttribute("searchMade", true);
-
-//      TODO: Currently prints the results - Remove later
         System.out.println("Search Results:");
         for (Song s : searchedSongs) {
             System.out.println("Title: " + s.getTitle() +

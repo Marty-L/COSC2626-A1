@@ -28,7 +28,6 @@ public class JsonParserService {
 
         try {
             //Get the JSON root and the songs array
-            //TODO: Really should be checking root and songsArray for null here...
             JsonNode rootNode = objectMapper.readTree(new File(filePath));
             JsonNode songsArray = rootNode.get("songs");
 
@@ -47,7 +46,6 @@ public class JsonParserService {
             } else throw new IllegalArgumentException("ERROR (parsing JSON): \"songs\" array is not an array");
 
         } catch (IOException e) {
-            //TODO: Probably need better handling for IOException
             e.printStackTrace();
         }
 

@@ -53,7 +53,6 @@ public class SongRepository {
 
     public List<Song> searchSongs(String title, String artist, String year, String album){
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        // TODO: Case insensitive search needs to be made
         List<String> filterExpressions = new ArrayList<>();
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
         Map<String, String> expressionAttributeNames = new HashMap<>();

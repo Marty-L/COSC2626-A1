@@ -61,7 +61,6 @@ public class Application implements CommandLineRunner {
 			s3Service.uploadFileList(imageFiles);
 
 		} catch (IOException e) {
-			//TODO: Add better exception handling
 			e.printStackTrace();
 		}
 	}

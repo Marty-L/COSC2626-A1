@@ -93,6 +93,7 @@ public class S3Service implements AutoCloseable {
     public void uploadFileList(Map<String, Path> imageFiles) {
         for(Map.Entry<String, Path> entry : imageFiles.entrySet()) {
 
+            //TODO: Move this to image downloader
             if (s3Client.doesObjectExist(s3BucketName, entry.getKey())) {
                 System.out.println("Skipped: " + entry.getKey() + "(already exists).");
                 continue;
