@@ -84,8 +84,9 @@ public class SongRepository {
         if (!filterExpressions.isEmpty()) {
             scanExpression.setFilterExpression(String.join(" and ", filterExpressions));
             scanExpression.setExpressionAttributeValues(expressionAttributeValues);
-            scanExpression.setExpressionAttributeNames(expressionAttributeNames);
-
+            if (!expressionAttributeNames.isEmpty()) {
+                scanExpression.setExpressionAttributeNames(expressionAttributeNames);
+            }
         }
 
         return dynamoDBMapper.scan(Song.class, scanExpression);

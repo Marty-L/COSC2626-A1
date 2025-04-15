@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!validateAtLeastOneFieldFilled()) {
             event.preventDefault();
         }
+        else {
+            capitalizeFormFields();
+        }
     });
 
     function validateAtLeastOneFieldFilled() {
@@ -27,5 +30,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         return true;
+    }
+
+    // Method to capitilize the first letter of each word, but lower case the remaining
+    function capitalizeWords(word) {
+        return word.toLowerCase().split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
+    function capitalizeFormFields() {
+        const fields = ['title', 'artist', 'album'];
+        fields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field.value.trim() !== '') {
+                field.value = capitalizeWords(field.value.trim());
+            }
+        });
     }
 });
