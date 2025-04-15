@@ -3,7 +3,7 @@ package com.example.COSC2626_A1.controller;
 import com.example.COSC2626_A1.model.User;
 import com.example.COSC2626_A1.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@AllArgsConstructor
 public class LoginController {
-    @Autowired
     private final UserService userService;
-
-    public LoginController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/login")
     public String login(Model model) {

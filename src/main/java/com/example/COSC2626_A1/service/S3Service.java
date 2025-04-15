@@ -8,25 +8,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.model.*;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 @Service
 public class S3Service implements AutoCloseable {
     private final AmazonS3 s3Client;
     private final String s3BucketName;
+
+    @Value("${app.testing}")
+    private boolean testing;
 
     public S3Service(
             @Value("${aws.access.key}") String accessKey,
@@ -50,12 +48,10 @@ public class S3Service implements AutoCloseable {
 
     @Override
     public void close() {
-        boolean testing = true;
-
         //NOTE: Ordinarily, this would NOT occur in a real-world app, but is being done here to save AW$$$
         System.out.println("Closing S3 client...");
 
-        if(testing) {
+        if(this.testing) {
             System.out.println("TESTING: BUCKET WILL NOT BE DELETED");
         } else {
             deleteBucket();
@@ -96,6 +92,11 @@ public class S3Service implements AutoCloseable {
 
     public void uploadFileList(Map<String, Path> imageFiles) {
         for(Map.Entry<String, Path> entry : imageFiles.entrySet()) {
+
+            if (s3Client.doesObjectExist(s3BucketName, entry.getKey())) {
+                System.out.println("Skipped: " + entry.getKey() + "(already exists).");
+                continue;
+            }
 
             if (uploadFile(entry.getKey(), entry.getValue())) {
                 System.out.println("Uploaded: " + entry.getKey());
