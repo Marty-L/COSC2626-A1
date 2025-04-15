@@ -13,17 +13,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DynamoDBConfig {
     // Initialising AWS variables from application.properties
-    @Value("${aws.access.key}")
-    private String awsAccessKey;
-
-    @Value("${aws.access.secret-key}")
-    private String awsSecretKey;
-
     @Value("${aws.dynamodb.endpoint}")
     private String awsDynamoDBEndPoint;
 
     @Value("${aws.region}")
     private String awsRegion;
+
+    @Value("${aws.access.key}")
+    private String awsAccessKey;
+
+    @Value("${aws.access.secret-key}")
+    private String awsSecretKey;
 
     @Value("${aws.sessionToken}")
     private String dynamodbSessionToken;
