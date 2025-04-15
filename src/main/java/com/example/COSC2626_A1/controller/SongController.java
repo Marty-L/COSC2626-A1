@@ -47,11 +47,14 @@ public class SongController {
                 song.getAlbum());
         // Adds returned songs to the model
 
+        //Add the image for each song returned from the search.
         for(Song s : searchedSongs) {
             s.setS3_img_URL(s3Service.getPreSignedImageUrl(s.getS3key()));
         }
 
-        model.addAttribute("searchedSongs", searchedSongs);
+        //Add the search results to the session and record a search was made
+        session.setAttribute("searchedSongs", searchedSongs);
+        session.setAttribute("searchMade", true);
 
 //      TODO: Currently prints the results - Remove later
         System.out.println("Search Results:");
@@ -67,14 +70,12 @@ public class SongController {
         if (user != null) {
             model.addAttribute("user", user);
         }
-        model.addAttribute("searchMade", true);
-        return "main"; // Renders templates/main.html with results
+
+        return "redirect:/main"; // Re-direct to main with results set in session
     }
 
-
-
     @PostMapping("/subscription/add")
-    public String addSubscription(@ModelAttribute Subscription subscription, HttpSession session, Model model) {
+    public String addSubscription(@ModelAttribute Subscription subscription, HttpSession session) {
         String email = subscription.getEmail();
         Subscription.SubSong newSong = subscription.getSongs().get(0);
         System.out.println("Email: " + email + " Songs:" + subscription.getSongs().get(0));
@@ -99,7 +100,7 @@ public class SongController {
             if (!exists) {
                 songs.add(newSong);
                 subscriptionService.updateSubscription(email, existing);
-            }
+            } //else case handled at the frontend by JS validator
         }
         // Save updated subscription into session only
         session.setAttribute("subscription", existing);
@@ -108,7 +109,7 @@ public class SongController {
     }
 
     @PostMapping("/subscription/remove")
-    public String removeSubscribedSong(@ModelAttribute Subscription subscription, HttpSession session, Model model) {
+    public String removeSubscribedSong(@ModelAttribute Subscription subscription, HttpSession session) {
         Subscription.SubSong songToRemove = subscription.getSongs().get(0);
 
         Subscription existing = subscriptionService.getSubscription(subscription.getEmail());

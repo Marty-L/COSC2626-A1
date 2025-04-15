@@ -34,6 +34,12 @@ public class MainController {
             //If searchMade wasn't already in the session attributes, a search hasn't been made yet.
             model.addAttribute("searchMade", searchMade != null && searchMade);
 
+            //Add the search results to the model, if any.
+            List<?> searchedSongs = (List<?>) session.getAttribute("searchedSongs");
+            if (searchedSongs != null) {
+                model.addAttribute("searchedSongs", searchedSongs);
+            }
+
             // Add a Song to the model - needed for searching
             model.addAttribute("song", new Song());
 
@@ -50,7 +56,6 @@ public class MainController {
                 }
             }
             model.addAttribute("subscribedSongs", subscribedSongs);
-
 
             return "main";
         } else {

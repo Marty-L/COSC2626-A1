@@ -58,5 +58,14 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:src="@{/js/validateSubscriptionRequest.js}"></script>
+<script th:inline="javascript">
+    //Make subscribed songs to the subscription validator JS.
+    //Adapated from here (viewed: 2025-04-15):
+    // https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#script-inlining-javascript-and-dart
+    /*<![CDATA[*/
+    let subscribedSongs = /*[[${subscribedSongs}]]*/ [];
+    /*]]>*/
+</script>
 </body>
 </html>
