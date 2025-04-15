@@ -1,9 +1,6 @@
 package com.example.COSC2626_A1.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +23,12 @@ public class Song {
     private String artist;
     @DynamoDBAttribute
     private String img_url;
+    @DynamoDBIgnore
+    private String s3_img_URL;
+
+    public String getS3key() {
+        //Return the 'filename.jpg' portion of the raw GitHub link...
+        //...this will be the key used to store this song's image on s3.
+        return img_url.substring(img_url.lastIndexOf("/") + 1);
+    }
 }

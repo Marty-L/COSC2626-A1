@@ -3,6 +3,7 @@ package com.example.COSC2626_A1.controller;
 import com.example.COSC2626_A1.model.Song;
 
 import com.example.COSC2626_A1.model.Subscription;
+import com.example.COSC2626_A1.service.S3Service;
 import com.example.COSC2626_A1.service.SongService;
 import com.example.COSC2626_A1.service.SubscriptionService;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ public class SongController {
 
     private final SongService songService;
     private final SubscriptionService subscriptionService;
+    private final S3Service s3Service;
 
     // TODO: Remove later - Debug purposes
     @GetMapping("/subscribe")
@@ -44,6 +46,11 @@ public class SongController {
                 song.getYear(),
                 song.getAlbum());
         // Adds returned songs to the model
+
+        for(Song s : searchedSongs) {
+            s.setS3_img_URL(s3Service.getPreSignedImageUrl(s.getS3key()));
+        }
+
         model.addAttribute("searchedSongs", searchedSongs);
 
 //      TODO: Currently prints the results - Remove later

@@ -1,6 +1,9 @@
 package com.example.COSC2626_A1.service;
 
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicSessionCredentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -21,27 +27,40 @@ import java.util.Map;
 public class S3Service implements AutoCloseable {
     private final AmazonS3 s3Client;
     private final String s3BucketName;
-    private final Regions awsRegion;
 
-    public S3Service(@Value("${aws.region}") String regionName,
-                     @Value("${aws.s3.bucket-name}") String s3BucketName) {
+    public S3Service(
+            @Value("${aws.access.key}") String accessKey,
+            @Value("${aws.access.secret-key}") String secretKey,
+            @Value("${aws.sessionToken}") String sessionToken,
+            @Value("${aws.region}") String regionName,
+            @Value("${aws.s3.bucket-name}") String s3BucketName) {
 
         this.s3BucketName = s3BucketName;
-        this.awsRegion = Regions.fromName(regionName);
 
         //Create S3 client.
         //Do this once, in the constructor, to minimise overhead with credentials etc.
         s3Client = AmazonS3ClientBuilder.standard()
-                .withCredentials(new ProfileCredentialsProvider())
-                .withRegion(awsRegion)
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicSessionCredentials(
+                        accessKey,
+                        secretKey,
+                        sessionToken)))
+                .withRegion(regionName)
                 .build();
     }
 
     @Override
     public void close() {
+        boolean testing = true;
+
         //NOTE: Ordinarily, this would NOT occur in a real-world app, but is being done here to save AW$$$
         System.out.println("Closing S3 client...");
-        deleteBucket();
+
+        if(testing) {
+            System.out.println("TESTING: BUCKET WILL NOT BE DELETED");
+        } else {
+            deleteBucket();
+        }
+
         System.out.println("S3 client closed.");
     }
 
@@ -49,6 +68,8 @@ public class S3Service implements AutoCloseable {
         //Create the S3 bucket on AWS
         //Adapted from Week03 workshop S3Tasks code (https://rmit.instructure.com/courses/141320/files/43744075?wrap=1)
         //Viewed: 2025-03-14
+
+        System.out.println("Creating bucket " + s3BucketName);
 
         try {
             if (!s3Client.doesBucketExistV2(s3BucketName)) {
@@ -111,8 +132,26 @@ public class S3Service implements AutoCloseable {
         return status;
     }
 
-    //TODO: Get an object from bucket
-    public void downloadFile() {}
+    public String getPreSignedImageUrl(String fileName) {
+        //Generate an (expiring) pre-signed URL for the image stored in S3.
+        //...this prevents the backend from having to download and store the image each time.
+
+        //Adapted from example here:
+        //https://github.com/awsdocs/amazon-s3-developer-guide/blob/master/doc_source/PresignedUrlUploadObjectJavaSDK.md
+        //Viewed: 2025-04-13
+
+        //Set the expiration time for the link to 1 hour.
+        Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(s3BucketName, fileName)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration);
+
+        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toString();
+    }
+
 
     public void deleteBucket() {
         //Delete the (unversioned) S3 bucket from AWS

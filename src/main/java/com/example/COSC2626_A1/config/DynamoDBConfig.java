@@ -25,7 +25,7 @@ public class DynamoDBConfig {
     @Value("${aws.region}")
     private String awsRegion;
 
-    @Value("${aws.dynamodb.sessionToken}")
+    @Value("${aws.sessionToken}")
     private String dynamodbSessionToken;
 
     public AWSCredentialsProvider amazonAWSCredentialsProvider(){
