@@ -95,12 +95,8 @@ public class SongController {
         List<Subscription.SubSong> songs = existing.getSongs();
         // Checks to see if this song is in the subscription already
         if (songs != null){
-            boolean exists = songs.stream()
-                    .anyMatch(s -> s.getTitle().equals(newSong.getTitle()) && s.getAlbum().equals(newSong.getAlbum()));
-            if (!exists) {
-                songs.add(newSong);
-                subscriptionService.updateSubscription(email, existing);
-            } //else case handled at the frontend by JS validator
+            songs.add(newSong);
+            subscriptionService.updateSubscription(email, existing);
         }
         // Save updated subscription into session only
         session.setAttribute("subscription", existing);
