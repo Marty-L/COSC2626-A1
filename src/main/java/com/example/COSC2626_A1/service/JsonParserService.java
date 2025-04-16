@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashSet;
 
 
@@ -21,7 +21,7 @@ public class JsonParserService {
     //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonParserService.class);
 
-    public LinkedHashSet<String> extractImageURLs(String filePath) throws IllegalArgumentException {
+    public LinkedHashSet<String> extractImageURLs(InputStream inputStream) throws IllegalArgumentException {
         //Extract the image URLs from the JSON at filePath and return as a List.
         //Will throw IllegalArgumentException if "songs" isn't a JSON array
         //Adapted from example here : https://mkyong.com/java/jackson-how-to-parse-json/#parse-json-array-with-jackson
@@ -33,7 +33,7 @@ public class JsonParserService {
 
         try {
             //Get the JSON root and the songs array
-            JsonNode rootNode = objectMapper.readTree(new File(filePath));
+            JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode songsArray = rootNode.get("songs");
 
             //Iterate through the "songs" array and grab the image URLs, adding to the list

@@ -11,9 +11,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -46,24 +47,22 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		try {
-			//Convert the classpath reference to an absolute path for the local filesystem
-			//Adapted from: https://www.baeldung.com/spring-classpath-file-access
-			//Viewed: 2025-03-06
-			File file = new ClassPathResource("data/2025a1.json").getFile();
-			String filePath = file.getAbsolutePath();
+			// Use ClassPathResource to load the JSON file from the classpath
+			Resource resource = new ClassPathResource("data/2025a1.json");
+			try (InputStream inputStream = resource.getInputStream()) {
+				// Parse the JSON file and grab the image URLs for downloading from GitHub
+				LinkedHashSet<String> imageURLs = jsonParserService.extractImageURLs(inputStream);
 
-			//Parse the JSON file and grab the imageURLs for downloading from GitHub
-			LinkedHashSet<String> imageURLs = jsonParserService.extractImageURLs(filePath);
+				// Download the images and save them in temp storage
+				Map<String, Path> imageFiles = imageDownloaderService.downloadImages(imageURLs);
 
-			//Download the images and save them in temp storage
-			Map<String, Path> imageFiles = imageDownloaderService.downloadImages(imageURLs);
-
-			//Create the S3 bucket and upload the images to it.
-			s3Service.createS3BucketIfNotExists();
-			s3Service.uploadFileList(imageFiles);
+				// Create the S3 bucket and upload the images to it.
+				s3Service.createS3BucketIfNotExists();
+				s3Service.uploadFileList(imageFiles);
+			}
 
 		} catch (IOException e) {
-            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
+			LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
 		}
 	}
 }
