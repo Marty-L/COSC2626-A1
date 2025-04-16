@@ -39,7 +39,7 @@ public class LoginController {
         } else {
             LOGGER.error("Error logging in: {}", user.getUser_name());
             model.addAttribute("loginErrorMessage", "Email or password is invalid");
-            return "/login";
+            return "login";
         }
     }
 }
