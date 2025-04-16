@@ -1,5 +1,7 @@
 package com.example.COSC2626_A1.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -14,6 +16,9 @@ import java.util.Map;
 
 @Service
 public class ImageDownloaderService {
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageDownloaderService.class);
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -49,21 +54,25 @@ public class ImageDownloaderService {
 
                         //Update the record of where the temp file is stored
                         imageFiles.put(fileName, tempFile);
-                        System.out.println("Image downloaded: " + imageURL + " -> " + tempFile);
+                        LOGGER.debug("Image downloaded: {} -> {}", imageURL, tempFile);
 
                     } else {
-                        System.err.println("Failed to download " + imageURL);
+                        LOGGER.error("Failed to download {}", imageURL);
                     }
                 } catch (RestClientException e) {
-                    System.err.println("REST exception whilst downloading " + imageURL);
+                    LOGGER.error("REST exception whilst downloading {}", imageURL);
+                    LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
                 } catch (IllegalArgumentException e) {
-                    System.err.println("Unable to add " + imageURL + " to list (illegal argument)");
+                    LOGGER.error("Unable to add {} to list (illegal argument)", imageURL);
+                    LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
                 } catch (IOException e) {
-                    System.err.println("IO error whilst writing to file " + fileName);
+                    LOGGER.error("IO error whilst writing to file {}", fileName);
+                    LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error creating the temporary local storage directory");
+            LOGGER.error("Error creating the temporary local storage directory");
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         }
 
         return imageFiles;

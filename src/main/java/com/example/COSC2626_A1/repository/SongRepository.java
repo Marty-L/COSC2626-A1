@@ -4,7 +4,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.example.COSC2626_A1.model.Song;
+
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class SongRepository {
     final private DynamoDBMapper dynamoDBMapper;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(SongRepository.class);
 
     public List<Song> getAllSongs(){
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
@@ -57,7 +63,7 @@ public class SongRepository {
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
         Map<String, String> expressionAttributeNames = new HashMap<>();
 
-        System.out.println("Title: " + title + ", Artist: " + artist + ", Year: " + year + ", Album: " + album);
+        LOGGER.debug("Title: {}, Artist: {}, Year: {}, Album: {}", title, artist, year, album);
 
         if (title != null && !title.isEmpty()) {
             filterExpressions.add("contains(title, :title)");

@@ -2,8 +2,11 @@ package com.example.COSC2626_A1.repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+
 import com.example.COSC2626_A1.model.User;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserRepository {
     final private DynamoDBMapper dynamoDBMapper;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 
     public List<User> getAllUsers() {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
@@ -45,10 +51,10 @@ public class UserRepository {
 
 
     public User validateUser(String email, String password) {
-        //System.out.println("Email: " + email + "\tPass: " + password);
+        LOGGER.debug("Email: {}\tPass: {}", email, password);
         User user = dynamoDBMapper.load(User.class, email);
         if (user != null && user.getPassword().equals(password)) {
-            //System.out.println("Email: " + user.getEmail() + "\tPass: " + user.getPassword());
+            LOGGER.debug("Email: {}\tPass: {}", user.getEmail(), user.getPassword());
             return user;
         }
         return null;
@@ -61,7 +67,7 @@ public class UserRepository {
 
         if (newUser == null) {
             dynamoDBMapper.save(user);
-            System.out.println("Registered new user: " + user.getEmail());
+            LOGGER.debug("Registered new user: {}", user.getEmail());
             return true;
         } else {
             return false;

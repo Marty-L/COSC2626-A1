@@ -8,6 +8,8 @@ import com.example.COSC2626_A1.service.SongService;
 import com.example.COSC2626_A1.service.SubscriptionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,9 @@ public class MainController {
     private final SubscriptionService subscriptionService;
     private final SongService songService;
     private final S3Service s3Service;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     @GetMapping("/main")
     public String login(Model model, HttpSession session) {
@@ -59,7 +64,7 @@ public class MainController {
 
             return "main";
         } else {
-            System.out.println("Error: user not present in session data.");
+            LOGGER.error("Error: user not present in session data.");
             return "redirect:/login";
         }
     }

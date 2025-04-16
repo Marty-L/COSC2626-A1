@@ -4,6 +4,8 @@ import com.example.COSC2626_A1.service.ImageDownloaderService;
 import com.example.COSC2626_A1.service.JsonParserService;
 
 import com.example.COSC2626_A1.service.S3Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,8 +30,8 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private final ImageDownloaderService imageDownloaderService;
 
-	//TODO: implement global logging/exception handling
-	//private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
+	//Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
 	public Application(JsonParserService jsonParserService, S3Service s3Service,
 					   ImageDownloaderService imageDownloaderService) {
@@ -61,7 +63,7 @@ public class Application implements CommandLineRunner {
 			s3Service.uploadFileList(imageFiles);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
 		}
 	}
 }

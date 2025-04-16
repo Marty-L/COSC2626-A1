@@ -9,6 +9,8 @@ import com.example.COSC2626_A1.service.SubscriptionService;
 import jakarta.servlet.http.HttpSession;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,9 @@ public class SongController {
     private final SongService songService;
     private final SubscriptionService subscriptionService;
     private final S3Service s3Service;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(SongController.class);
 
     @GetMapping("/subscribe")
     @ResponseBody
@@ -53,12 +58,10 @@ public class SongController {
             s.setS3_img_URL(s3Service.getPreSignedImageUrl(s.getS3key()));
         }
 
-        System.out.println("Search Results:");
+        LOGGER.debug("Search Results:");
         for (Song s : searchedSongs) {
-            System.out.println("Title: " + s.getTitle() +
-                    ", Artist: " + s.getArtist() +
-                    ", Year: " + s.getYear() +
-                    ", Album: " + s.getAlbum());
+            LOGGER.debug("Title: {}, Artist: {}, Year: {}, Album: {}",
+                    s.getTitle(), s.getArtist(), s.getYear(), s.getAlbum());
         }
 
         // Retaining user in the model after a search
@@ -74,7 +77,7 @@ public class SongController {
     public String addSubscription(@ModelAttribute Subscription subscription, HttpSession session) {
         String email = subscription.getEmail();
         Subscription.SubSong newSong = subscription.getSongs().get(0);
-        System.out.println("Email: " + email + " Songs:" + subscription.getSongs().get(0));
+        LOGGER.debug("Email: {} Songs: {}", email, subscription.getSongs().get(0));
 
         Subscription existing = subscriptionService.getSubscription(email);
         if (existing == null) {

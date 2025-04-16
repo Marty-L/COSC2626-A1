@@ -3,6 +3,8 @@ package com.example.COSC2626_A1.controller;
 import com.example.COSC2626_A1.model.User;
 import com.example.COSC2626_A1.service.UserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,9 @@ public class RegisterController {
 
     @Autowired
     private final UserService userService;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
 
     public RegisterController(UserService userService) {
         this.userService = userService;
@@ -45,8 +50,8 @@ public class RegisterController {
         boolean registrationSuccess = userService.registerNewUser(user);
 
         if(registrationSuccess) {
-            System.out.println("Registered: " + user.getUser_name() + " with email: " + user.getUser_name()
-                    + " and password: " + user.getPassword());
+            LOGGER.info("Registered: {} with email: {} and password: {}",
+                    user.getUser_name(), user.getUser_name(), user.getPassword());
 
             //Add a registration success message to the login page and redirect to it.
             redirectAttributes.addFlashAttribute("registrationSuccessMessage",

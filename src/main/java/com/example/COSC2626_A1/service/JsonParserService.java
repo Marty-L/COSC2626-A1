@@ -1,5 +1,7 @@
 package com.example.COSC2626_A1.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,6 +17,9 @@ public class JsonParserService {
 
     //Object mapper for reading the JSON tree
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonParserService.class);
 
     public LinkedHashSet<String> extractImageURLs(String filePath) throws IllegalArgumentException {
         //Extract the image URLs from the JSON at filePath and return as a List.
@@ -38,15 +43,15 @@ public class JsonParserService {
 
                     //Debug info: report if we've discarded a duplicate URL.
                     if (imageURLs.add(imageURL)) {
-                        System.out.println("Got URL:" + imageURL);
+                        LOGGER.debug("Got URL:{}", imageURL);
                     } else {
-                        System.out.println("Discarded duplicate: " + imageURL);
+                        LOGGER.debug("Discarded duplicate: {}", imageURL);
                     }
                 }
             } else throw new IllegalArgumentException("ERROR (parsing JSON): \"songs\" array is not an array");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         }
 
         return imageURLs;

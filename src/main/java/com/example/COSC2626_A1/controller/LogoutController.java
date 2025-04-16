@@ -13,7 +13,7 @@ public class LogoutController {
         // Invalidate the session
         session.invalidate();
 
-        // Redirect the user to the login page
+        // Redirect the user to the login page.
         //Add a registration success message to the login page and redirect to it.
         redirectAttributes.addFlashAttribute("logoutSuccessMessage",
                 "You have been logged out successfully.");

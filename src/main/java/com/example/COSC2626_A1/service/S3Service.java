@@ -4,6 +4,8 @@ package com.example.COSC2626_A1.service;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicSessionCredentials;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ import java.util.Map;
 public class S3Service implements AutoCloseable {
     private final AmazonS3 s3Client;
     private final String s3BucketName;
+
+    //Logging adapted from example here: https://www.baeldung.com/slf4j-with-log4j2-logback (viewed 2025-04-16)
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3Service.class);
 
     @Value("${app.testing}")
     private boolean testing;
@@ -49,15 +54,15 @@ public class S3Service implements AutoCloseable {
     @Override
     public void close() {
         //NOTE: Ordinarily, this would NOT occur in a real-world app, but is being done here to save AW$$$
-        System.out.println("Closing S3 client...");
+        LOGGER.info("Closing S3 client...");
 
         if(this.testing) {
-            System.out.println("TESTING: BUCKET WILL NOT BE DELETED");
+            LOGGER.info("TESTING: BUCKET WILL NOT BE DELETED");
         } else {
             deleteBucket();
         }
 
-        System.out.println("S3 client closed.");
+        LOGGER.info("S3 client closed.");
     }
 
     public void createS3BucketIfNotExists() {
@@ -65,28 +70,28 @@ public class S3Service implements AutoCloseable {
         //Adapted from Week03 workshop S3Tasks code (https://rmit.instructure.com/courses/141320/files/43744075?wrap=1)
         //Viewed: 2025-03-14
 
-        System.out.println("Creating bucket " + s3BucketName);
+        LOGGER.info("Creating bucket " + s3BucketName);
 
         try {
             if (!s3Client.doesBucketExistV2(s3BucketName)) {
                 //Create bucket in the region specified by the client.
                 s3Client.createBucket(new CreateBucketRequest(s3BucketName));
-                System.out.println("S3 bucket created: " + s3BucketName);
+                LOGGER.info("S3 bucket created: {}", s3BucketName);
             } else {
-                System.out.println("Bucket: " + s3BucketName + " already exists");
+                LOGGER.info("Bucket: {} already exists", s3BucketName);
             }
 
             //Verify that the bucket was created by retrieving it and checking its location.
             String bucketLocation = s3Client.getBucketLocation(new GetBucketLocationRequest(s3BucketName));
-            System.out.println("Bucket location: " + bucketLocation);
+            LOGGER.info("Bucket location: {}", bucketLocation);
 
         }  catch (AmazonServiceException e) {
             //Call transmitted successfully, but AWS S3 couldn't process it and returned an error response.
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
 
         } catch (SdkClientException e) {
             //Couldn't reach AWS S3 for response, or client couldn't parse the response .
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         }
     }
 
@@ -95,14 +100,14 @@ public class S3Service implements AutoCloseable {
 
             //TODO: Move this to image downloader
             if (s3Client.doesObjectExist(s3BucketName, entry.getKey())) {
-                System.out.println("Skipped: " + entry.getKey() + "(already exists).");
+                LOGGER.debug("Skipped: {}(already exists).", entry.getKey());
                 continue;
             }
 
             if (uploadFile(entry.getKey(), entry.getValue())) {
-                System.out.println("Uploaded: " + entry.getKey());
+                LOGGER.debug("Uploaded: {}", entry.getKey());
             } else {
-                System.out.println("Upload of " + entry.getKey() + " failed");
+                LOGGER.debug("Upload of {} failed", entry.getKey());
             }
         }
     }
@@ -125,11 +130,11 @@ public class S3Service implements AutoCloseable {
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         }
         return status;
     }
@@ -163,12 +168,12 @@ public class S3Service implements AutoCloseable {
         try {
             ObjectListing objectListing = s3Client.listObjects(s3BucketName);
 
-            System.out.println("Deleting all objects in bucket: " + s3BucketName);
+            LOGGER.info("Deleting all objects in bucket: {}", s3BucketName);
 
             //Delete all objects from the bucket.
             while (true) {
                 for (S3ObjectSummary obj : objectListing.getObjectSummaries()) {
-                    System.out.println("Deleting object: " + obj.getKey());
+                    LOGGER.debug("Deleting object: {}", obj.getKey());
                     s3Client.deleteObject(s3BucketName, obj.getKey());
                 }
 
@@ -177,24 +182,24 @@ public class S3Service implements AutoCloseable {
                 if (objectListing.isTruncated()) {
                     objectListing = s3Client.listNextBatchOfObjects(objectListing);
                 } else {
-                    System.out.println("No more objects in bucket: " + s3BucketName);
+                    LOGGER.debug("No more objects in bucket: {}", s3BucketName);
                     break;
                 }
             }
 
             //Bucket is empty; delete the bucket.
-            System.out.println("Deleting bucket: " + s3BucketName +"...");
+            LOGGER.debug("Deleting bucket: {}...", s3BucketName);
             s3Client.deleteBucket(s3BucketName);
-            System.out.println("Bucket deleted.");
+            LOGGER.debug("Bucket deleted.");
 
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client couldn't
             // parse the response from Amazon S3.
-            e.printStackTrace();
+            LOGGER.error("ERROR [{}]:", this.getClass().getName(), e);
         }
     }
 }
