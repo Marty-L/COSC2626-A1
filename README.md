@@ -7,7 +7,13 @@
 * API Gateway 
 * DynamoDB
 
-## How to run
+## Creating and Populating the Databases
+Change the permissions of the Bash script. `chmod u+x src/main/resources/data/createPopulateDB.sh`
+
+Run `./src/main/resources/data/createPopulateDB.sh`
+
+
+## How to run the Web Application
 Follow Lab2 guide:
 	* Activity 1 - Create EC2 instance
 	
