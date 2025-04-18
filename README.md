@@ -7,7 +7,18 @@
 * API Gateway 
 * DynamoDB
 
-## How to create the DB and start the Web Application
+## How to create and populate the DB 
+Download the Github ZIP file locally and extract the files required to create and populate the DB, stored in `src/main/resources/data/`
+
+Upload `createPopulateDB.sh`, `2025a1.json` and `login.json` to your AWS Cloudshell CLI
+.
+
+Run the script in Cloudshell using:
+* `chmod u+x createPopulateDB.sh`
+* `./createPopulateDB.sh`
+
+Your DynamoDBs should now be created and populated.
+## How to create and start the Web app
 Follow Lab2 guide:
 ### Activity 1 - Create EC2 instance
 * Activity 2 - Create Linux VM 
@@ -49,25 +60,23 @@ Follow Lab2 guide:
           OS name: "linux", version: "6.8.0-1024-aws", arch: "amd64", family: "unix"
         * `git clone https://github.com/Marty-L/COSC2626-A1.git`
         * `cd COSC2626-A1`
-* Change the permissions of the Bash script. `chmod u+x src/main/resources/data/createPopulateDB.sh`
-  - Run `./src/main/resources/data/createPopulateDB.sh`
-* Update keys
-  * `vim src/main/resources/application.properties`
-      - Edit in your AWS keys BEFORE building 
-  * `mvn clean package`
-      - Tests are deliberately skipped in POM.xml:
+  * Update keys
+    * `vim src/main/resources/application.properties`
+        - Edit in your AWS keys BEFORE building 
+    * `mvn clean package`
+        - Tests are deliberately skipped in POM.xml:
+        ```
+      <plugins>
+            <! --- ...other plugins... -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
       ```
-    <plugins>
-          <! --- ...other plugins... -->
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.22.2</version>
-              <configuration>
-                  <skipTests>true</skipTests>
-              </configuration>
-          </plugin>
-      </plugins>
-    ```
 * Run the Program
     * `sudo java -jar target/COSC2626-A1-0.0.1-SNAPSHOT.jar`
